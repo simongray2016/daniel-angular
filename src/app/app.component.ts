@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/services/auth.service';
 import { FirebaseService } from 'src/services/firebase.service';
-import { LocalStorageService } from 'src/services/local-storage.service';
-import { SetAuthState } from 'src/shared/states/auth/auth.actions';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 
 @Component({
@@ -17,9 +16,8 @@ export class AppComponent implements OnInit {
   authState$!: Observable<AuthStateEnum>;
 
   constructor(
-    private _localStorage: LocalStorageService,
+    private _auth: AuthService,
     private _firebase: FirebaseService,
-    private _store: Store,
     private _router: Router
   ) {}
 
@@ -29,14 +27,14 @@ export class AppComponent implements OnInit {
   }
 
   checkFirebaseAuthToken() {
-    const refreshToken = this._localStorage.getItem('refreshToken');
+    const refreshToken = this._auth.getRefreshToken();
     if (refreshToken) {
       this._firebase.exchangeWithRefreshToken(refreshToken).subscribe(
-        () => this.setAuthState(AuthStateEnum.authenticated),
-        () => this.setAuthState(AuthStateEnum.unAuthenticated)
+        () => this._auth.setAuthState(AuthStateEnum.authenticated),
+        () => this._auth.setAuthState(AuthStateEnum.unAuthenticated)
       );
     } else {
-      this.setAuthState(AuthStateEnum.unAuthenticated);
+      this._auth.setAuthState(AuthStateEnum.unAuthenticated);
     }
   }
 
@@ -53,9 +51,5 @@ export class AppComponent implements OnInit {
           break;
       }
     });
-  }
-
-  setAuthState(state: AuthStateEnum) {
-    this._store.dispatch(new SetAuthState(state));
   }
 }

@@ -7,8 +7,17 @@ import { FirebaseService } from 'src/services/firebase.service';
   styleUrls: ['./sign-in-screen.component.scss'],
 })
 export class SignInScreenComponent implements OnInit {
-  constructor(private _firebaseService: FirebaseService) {}
+  constructor(private _firebase: FirebaseService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  signIn() {
+    this._firebase
+      .signInWithEmailPassword({
+        email: 'teo@gmail.com',
+        password: '123456',
+        returnSecureToken: true,
+      })
+      .subscribe();
   }
 }

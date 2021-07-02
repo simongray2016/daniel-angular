@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   FirebaseConfig,
   FIREBASE_CONFIG,
@@ -20,18 +20,14 @@ export class FirebaseService {
     private _localStorage: LocalStorageService
   ) {}
 
-  exchangeWithRefreshToken(refresh_token: string) {
+  exchangeWithRefreshToken(
+    refresh_token: string
+  ): Observable<SignInResponeModel> {
     const { apiKey } = this._firebaseConfig;
     return this._http
       .post(
         `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
-        `grant_type=refresh_token&refresh_token=${refresh_token}`,
-        {
-          headers: new HttpHeaders().set(
-            'Content-Type',
-            'application/x-www-form-urlencoded'
-          ),
-        }
+        `grant_type=refresh_token&refresh_token=${refresh_token}`
       )
       .pipe(
         map((res: any) => {
@@ -41,6 +37,7 @@ export class FirebaseService {
             mappedRes[camelCaseKey] = res[key];
           });
           this._localStorage.setItemsFromObject(mappedRes);
+          return mappedRes;
         })
       );
   }
@@ -49,7 +46,7 @@ export class FirebaseService {
     email,
     password,
     returnSecureToken,
-  }: SignInBodyModel): Observable<any> {
+  }: SignInBodyModel): Observable<SignInResponeModel> {
     const { apiKey } = this._firebaseConfig;
     return this._http
       .post<SignInResponeModel>(
@@ -58,17 +55,13 @@ export class FirebaseService {
           email,
           password,
           returnSecureToken,
-        },
-        {
-          headers: new HttpHeaders().set('Content-Type', 'application/json'),
         }
       )
       .pipe(
         map((res: SignInResponeModel) => {
           this._localStorage.setItemsFromObject(res);
-          return true;
-        }),
-        catchError(() => of(false))
+          return res;
+        })
       );
   }
 }

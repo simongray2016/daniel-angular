@@ -9,6 +9,7 @@ import { NgxsModule } from '@ngxs/store';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 import { AuthState } from 'src/shared/states/auth/auth.state';
+import { httpInterceptorProviders } from 'src/shared/interceptors';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +22,7 @@ import { AuthState } from 'src/shared/states/auth/auth.state';
     BrowserAnimationsModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [httpInterceptorProviders],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
