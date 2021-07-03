@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, timer, zip } from 'rxjs';
+import { find } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { FirebaseService } from 'src/services/firebase.service';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
@@ -14,6 +15,8 @@ import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 export class AppComponent implements OnInit {
   @Select(AuthState)
   authState$!: Observable<AuthStateEnum>;
+  loadingScreenSubject$ = new BehaviorSubject<boolean>(true);
+  loadingScreen$ = this.loadingScreenSubject$.asObservable();
 
   constructor(
     private _auth: AuthService,
@@ -22,8 +25,18 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.setLoadingScreen();
     this.listenAuthStateChange();
     this.checkFirebaseAuthToken();
+  }
+
+  setLoadingScreen() {
+    const nextAuthState$ = this.authState$.pipe(
+      find((state) => state !== AuthStateEnum.unknow)
+    );
+    zip(nextAuthState$, timer(3000)).subscribe(() =>
+      this.loadingScreenSubject$.next(false)
+    );
   }
 
   checkFirebaseAuthToken() {

@@ -11,8 +11,10 @@ import { environment } from 'src/environments/environment';
 import { AuthState } from 'src/shared/states/auth/auth.state';
 import { httpInterceptorProviders } from 'src/shared/interceptors';
 
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LoadingScreenComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
