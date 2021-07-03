@@ -23,7 +23,7 @@ import { SignInScreenComponent } from './sign-in-screen/sign-in-screen.component
     MatIconModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
+    MatProgressSpinnerModule
   ],
 })
 export class SignInModule {}

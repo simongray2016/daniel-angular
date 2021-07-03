@@ -5,12 +5,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { AppComponent } from './app.component';
+import { httpInterceptorProviders } from 'src/shared/interceptors';
 import { environment } from 'src/environments/environment';
 import { AuthState } from 'src/shared/states/auth/auth.state';
-import { httpInterceptorProviders } from 'src/shared/interceptors';
 
+import { AppComponent } from './app.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
     }),
     BrowserAnimationsModule,
     HttpClientModule,
+    MatSnackBarModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent],

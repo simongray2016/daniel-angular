@@ -30,6 +30,9 @@
         <mat-form-field class="w-full mt-10" appearance="outline">
           <mat-label>Email Address</mat-label>
           <input formControlName="email" matInput />
+          <mat-error *ngIf="email.invalid">{{
+            getErrorMessage(email)
+          }}</mat-error>
         </mat-form-field>
         <mat-form-field class="w-full mt-5" appearance="outline">
           <mat-label>Password</mat-label>
@@ -45,6 +48,9 @@
           >
             {{ hidePassword ? "visibility" : "visibility_off" }}
           </mat-icon>
+          <mat-error *ngIf="password.invalid">{{
+            getErrorMessage(password)
+          }}</mat-error>
         </mat-form-field>
         <div class="flex justify-between">
           <mat-checkbox formControlName="returnSecureToken"

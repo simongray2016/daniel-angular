@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
     const nextAuthState$ = this.authState$.pipe(
       find((state) => state !== AuthStateEnum.unknow)
     );
-    zip(nextAuthState$, timer(3000)).subscribe(() =>
+    zip(nextAuthState$, timer(2000)).subscribe(() =>
       this.loadingScreenSubject$.next(false)
     );
   }
