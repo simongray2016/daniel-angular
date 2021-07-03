@@ -17,8 +17,8 @@
       "
     >
       <img
-        class="w-12 h-12"
-        src="http://angular-material.fusetheme.com/assets/images/logo/logo.svg"
+        class="w-20 h-20"
+        src="https://angular.io/assets/images/logos/angular/angular.svg"
         alt=""
       />
       <div class="mt-10 font-bold text-3xl">Sign in</div>
@@ -26,29 +26,45 @@
         <div class="text-md">Don't have an account?</div>
         <a href="#" class="text-purple-500 ml-2 hover:underline">Sign up</a>
       </div>
-      <mat-form-field class="w-full mt-10" appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput value="simongray2016@gmail.com" />
-      </mat-form-field>
-      <mat-form-field class="w-full mt-5" appearance="outline">
-        <mat-label>Password</mat-label>
-        <input type="password" matInput value="simongray2016@gmail.com" />
-        <mat-icon class="cursor-pointer" matSuffix>visibility</mat-icon>
-      </mat-form-field>
-      <div class="flex justify-between">
-        <mat-checkbox>Remember me</mat-checkbox>
-        <a href="#" class="text-purple-500 ml-2 hover:underline"
-          >Forgot password?</a
+      <form [formGroup]="signInForm">
+        <mat-form-field class="w-full mt-10" appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <input formControlName="email" matInput />
+        </mat-form-field>
+        <mat-form-field class="w-full mt-5" appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            matInput
+          />
+          <mat-icon
+            (click)="toggleHidePassword()"
+            class="cursor-pointer"
+            matSuffix
+          >
+            {{ hidePassword ? "visibility" : "visibility_off" }}
+          </mat-icon>
+        </mat-form-field>
+        <div class="flex justify-between">
+          <mat-checkbox formControlName="returnSecureToken"
+            >Remember me</mat-checkbox
+          >
+          <a href="#" class="text-purple-500 ml-2 hover:underline"
+            >Forgot password?</a
+          >
+        </div>
+        <button
+          class="mt-8 w-full h-14 rounded-full flex justify-center items-center"
+          mat-flat-button
+          [disabled]="loading"
+          color="primary"
+          (click)="signIn()"
         >
-      </div>
-      <button
-        class="mt-8 w-full h-14 rounded-full"
-        mat-flat-button
-        color="primary"
-        (click)="signIn()"
-      >
-        Sign in
-      </button>
+          <ng-container *ngIf="!loading">Sign in</ng-container>
+          <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
+        </button>
+      </form>
     </div>
   </div>
   <div

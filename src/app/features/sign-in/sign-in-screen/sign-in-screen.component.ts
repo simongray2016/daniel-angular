@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { finalize, startWith } from 'rxjs/operators';
 import { FirebaseService } from 'src/services/firebase.service';
 
 @Component({
@@ -7,17 +9,42 @@ import { FirebaseService } from 'src/services/firebase.service';
   styleUrls: ['./sign-in-screen.component.scss'],
 })
 export class SignInScreenComponent implements OnInit {
-  constructor(private _firebase: FirebaseService) {}
+  hidePassword = true;
+  loading = false;
+  signInForm: FormGroup;
+
+  constructor(private _firebase: FirebaseService, private _fb: FormBuilder) {
+    this.signInForm = this._fb.group({
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+      returnSecureToken: [false],
+    });
+  }
 
   ngOnInit(): void {}
 
   signIn() {
-    this._firebase
-      .signInWithEmailPassword({
-        email: 'teo@gmail.com',
-        password: '123456',
-        returnSecureToken: true,
-      })
-      .subscribe();
+    if (this.signInForm.valid) {
+      const { email, password, returnSecureToken } = this.signInForm.controls;
+      this.loading = true;
+      this.signInForm.disable();
+      this._firebase
+        .signInWithEmailPassword({
+          email: email.value,
+          password: password.value,
+          returnSecureToken: returnSecureToken.value,
+        })
+        .pipe(
+          finalize(() => {
+            this.loading = false;
+            this.signInForm.enable();
+          })
+        )
+        .subscribe();
+    }
+  }
+
+  toggleHidePassword() {
+    this.hidePassword = !this.hidePassword;
   }
 }
