@@ -1,7 +1,8 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { BehaviorSubject, Observable, Subject, timer, zip } from 'rxjs';
+import { BehaviorSubject, Observable, timer, zip } from 'rxjs';
 import { find } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { FirebaseService } from 'src/services/firebase.service';
@@ -10,7 +11,13 @@ import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  styles: [
+    `
+      :host {
+        position: relative;
+      }
+    `,
+  ],
 })
 export class AppComponent implements OnInit {
   @Select(AuthState)
@@ -21,12 +28,13 @@ export class AppComponent implements OnInit {
   constructor(
     private _auth: AuthService,
     private _firebase: FirebaseService,
-    private _router: Router
+    private _router: Router,
+    private _location: Location
   ) {}
 
   ngOnInit() {
     this.setLoadingScreen();
-    this.listenAuthStateChange();
+    this.handleAuthStateChange();
     this.checkFirebaseAuthToken();
   }
 
@@ -51,18 +59,31 @@ export class AppComponent implements OnInit {
     }
   }
 
-  listenAuthStateChange() {
+  handleAuthStateChange() {
     this.authState$.subscribe((state: AuthStateEnum) => {
       switch (state) {
-        case AuthStateEnum.authenticated:
-          this._router.navigateByUrl('/');
-          break;
         case AuthStateEnum.unAuthenticated:
-          this._router.navigateByUrl('/sign-in');
+          this.navigateSignInPage();
           break;
         default:
           break;
       }
     });
+  }
+
+  navigateSignInPage() {
+    const locationPath = this._location.path();
+    const isFromOtherUrl = !locationPath.includes('/sign-in');
+    if (isFromOtherUrl) {
+      this._router.navigate(['/sign-in'], {
+        queryParams: locationPath
+          ? {
+              returnUrl: locationPath,
+            }
+          : {},
+      });
+    } else {
+      this._router.navigateByUrl(locationPath);
+    }
   }
 }

@@ -14,7 +14,16 @@ import { SnackBarService } from 'src/services/snack-bar.service';
 @Component({
   selector: 'app-sign-in-screen',
   templateUrl: './sign-in-screen.component.html',
-  styleUrls: ['./sign-in-screen.component.scss'],
+  styles: [
+    `
+      ::ng-deep {
+        .mat-progress-spinner circle,
+        .mat-spinner circle {
+          stroke: white;
+        }
+      }
+    `,
+  ],
 })
 export class SignInScreenComponent implements OnInit {
   hidePassword = true;

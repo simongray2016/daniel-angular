@@ -13,9 +13,10 @@ import { AuthState } from 'src/shared/states/auth/auth.state';
 
 import { AppComponent } from './app.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
+import { ErrorScreenComponent } from './components/error-screen/error-screen.component';
 
 @NgModule({
-  declarations: [AppComponent, LoadingScreenComponent],
+  declarations: [AppComponent, LoadingScreenComponent, ErrorScreenComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
