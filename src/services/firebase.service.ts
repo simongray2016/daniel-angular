@@ -5,7 +5,11 @@ import {
   FirebaseConfig,
   FIREBASE_CONFIG,
 } from 'src/environments/firebase.config';
-import { SignInBodyModel, AuthenticatedDataModel } from '../models/authmodel';
+import {
+  SignInBodyModel,
+  AuthenticatedDataModel,
+  SignUpBodyModal,
+} from '../models/authmodel';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,6 +35,22 @@ export class FirebaseService {
     const { apiKey } = this._firebaseConfig;
     return this._http.post<AuthenticatedDataModel>(
       `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+      {
+        email,
+        password,
+        returnSecureToken,
+      }
+    );
+  }
+
+  signUpWithEmailPassword({
+    email,
+    password,
+    returnSecureToken = true,
+  }: SignUpBodyModal) {
+    const { apiKey } = this._firebaseConfig;
+    return this._http.post<AuthenticatedDataModel>(
+      `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`,
       {
         email,
         password,

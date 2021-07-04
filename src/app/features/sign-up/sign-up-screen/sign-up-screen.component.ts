@@ -29,6 +29,7 @@ export class SignUpScreenComponent implements OnInit {
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
+      acceptPolicy: [false, [Validators.required]],
     });
   }
 
@@ -53,11 +54,11 @@ export class SignUpScreenComponent implements OnInit {
     return controls.hasError('email') ? 'Email is not valid' : '';
   }
 
-  signIn() {
+  signUp() {
     if (this.signUpForm.valid) {
       const { email, password, rememberUser } = this.signUpForm.controls;
       this._auth
-        .signInWithEmailPassword({
+        .signUpWithEmailPassword({
           email: email.value,
           password: password.value,
           rememberUser: rememberUser.value,

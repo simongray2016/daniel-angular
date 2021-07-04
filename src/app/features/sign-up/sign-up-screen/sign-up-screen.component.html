@@ -75,7 +75,7 @@
           }}</mat-error>
         </mat-form-field>
         <div class="flex justify-between">
-          <mat-checkbox>
+          <mat-checkbox formControlName="acceptPolicy">
             <span class="whitespace-normal">
               I agree to the
               <a href="#" class="text-purple-500 hover:underline"
@@ -93,7 +93,7 @@
           mat-flat-button
           [disabled]="loading"
           color="primary"
-          (click)="signIn()"
+          (click)="signUp()"
         >
           <ng-container *ngIf="!loading">Sign up</ng-container>
           <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
@@ -102,14 +102,7 @@
     </div>
   </div>
   <div
-    class="
-      flex-col
-      justify-center
-      hidden
-      bg-gray-800
-      px-24
-      lg:flex lg:w-1/2
-    "
+    class="flex-col justify-center hidden bg-gray-800 px-24 lg:flex lg:w-1/2"
   >
     <h1 class="text-white text-5xl font-bold">
       Welcome to <br />

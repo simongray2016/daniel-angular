@@ -21,3 +21,5 @@ export interface AuthenticatedDataModel {
   rememberUser?: boolean;
   expireTime?: number;
 }
+
+export interface SignUpBodyModal extends SignInBodyModel {}

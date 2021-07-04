@@ -3,7 +3,11 @@ import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SignInBodyModel, AuthenticatedDataModel } from 'src/models/authmodel';
+import {
+  SignInBodyModel,
+  AuthenticatedDataModel,
+  SignUpBodyModal,
+} from 'src/models/authmodel';
 import { SetAuthState } from 'src/shared/states/auth/auth.actions';
 import { AuthStateEnum } from 'src/shared/states/auth/auth.state';
 import { DateService } from './date.service';
@@ -26,15 +30,12 @@ export class AuthService {
   ): Observable<AuthenticatedDataModel> {
     return this._firebase.signInWithEmailPassword(signInData).pipe(
       map((res: AuthenticatedDataModel) => {
-        const expireTime = this._date.getTime() + parseInt(res.expiresIn) * 60;
-        const newData: AuthenticatedDataModel = {
+        this.setDataResponseSignInSignUpToLocalStorage({
           ...res,
           rememberUser: signInData.rememberUser,
-          expireTime,
-        };
-        this._localStorage.setItemsFromObject(newData);
+        });
         this.setAuthState(AuthStateEnum.authenticated);
-        return newData;
+        return res;
       })
     );
   }
@@ -47,11 +48,35 @@ export class AuthService {
           const camelCaseKey = camelCase(key);
           newData[camelCaseKey] = res[key];
         });
-        this._localStorage.setItemsFromObject(newData);
+        this.setDataResponseSignInSignUpToLocalStorage(newData);
         this.setAuthState(AuthStateEnum.authenticated);
         return newData;
       })
     );
+  }
+
+  signUpWithEmailPassword(
+    signUpData: SignUpBodyModal
+  ): Observable<AuthenticatedDataModel> {
+    return this._firebase.signUpWithEmailPassword(signUpData).pipe(
+      map((res: AuthenticatedDataModel) => {
+        this.setDataResponseSignInSignUpToLocalStorage({
+          ...res,
+          rememberUser: true,
+        });
+        this.setAuthState(AuthStateEnum.authenticated);
+        return res;
+      })
+    );
+  }
+
+  setDataResponseSignInSignUpToLocalStorage(res: AuthenticatedDataModel) {
+    const expireTime = this._date.getTime() + parseInt(res.expiresIn) * 60;
+    const newData: AuthenticatedDataModel = {
+      ...res,
+      expireTime,
+    };
+    this._localStorage.setItemsFromObject(newData);
   }
 
   signOut() {
