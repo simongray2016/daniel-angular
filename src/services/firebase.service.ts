@@ -1,67 +1,41 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import {
   FirebaseConfig,
   FIREBASE_CONFIG,
 } from 'src/environments/firebase.config';
-import { SignInBodyModel, SignInResponeModel } from '../models/firebase.model';
-import { LocalStorageService } from './local-storage.service';
-import { camelCase } from 'lodash';
-
+import { SignInBodyModel, AuthenticatedDataModel } from '../models/authmodel';
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
   constructor(
     @Inject(FIREBASE_CONFIG) private _firebaseConfig: FirebaseConfig,
-    private _http: HttpClient,
-    private _localStorage: LocalStorageService
+    private _http: HttpClient
   ) {}
 
-  exchangeWithRefreshToken(
-    refresh_token: string
-  ): Observable<SignInResponeModel> {
+  exchangeWithRefreshToken(refreshToken: string): Observable<any> {
     const { apiKey } = this._firebaseConfig;
-    return this._http
-      .post(
-        `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
-        `grant_type=refresh_token&refresh_token=${refresh_token}`
-      )
-      .pipe(
-        map((res: any) => {
-          const mappedRes: any = {};
-          Object.keys(res).forEach((key) => {
-            const camelCaseKey = camelCase(key);
-            mappedRes[camelCaseKey] = res[key];
-          });
-          this._localStorage.setItemsFromObject(mappedRes);
-          return mappedRes;
-        })
-      );
+    return this._http.post(
+      `https://securetoken.googleapis.com/v1/token?key=${apiKey}`,
+      `grant_type=refresh_token&refresh_token=${refreshToken}`
+    );
   }
 
   signInWithEmailPassword({
     email,
     password,
-    returnSecureToken,
-  }: SignInBodyModel): Observable<SignInResponeModel> {
+    returnSecureToken = true,
+  }: SignInBodyModel): Observable<AuthenticatedDataModel> {
     const { apiKey } = this._firebaseConfig;
-    return this._http
-      .post<SignInResponeModel>(
-        `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
-        {
-          email,
-          password,
-          returnSecureToken,
-        }
-      )
-      .pipe(
-        map((res: SignInResponeModel) => {
-          this._localStorage.setItemsFromObject(res);
-          return res;
-        })
-      );
+    return this._http.post<AuthenticatedDataModel>(
+      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
+      {
+        email,
+        password,
+        returnSecureToken,
+      }
+    );
   }
 }

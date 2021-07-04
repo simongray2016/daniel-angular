@@ -19,8 +19,12 @@ const routes: Routes = [
       import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
-    path: '**',
+    path: '404-not-found',
     component: ErrorScreenComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '404-not-found',
   },
 ];
 

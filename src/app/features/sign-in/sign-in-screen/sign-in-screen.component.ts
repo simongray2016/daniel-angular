@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { throwError } from 'rxjs';
 import { catchError, finalize, startWith, tap } from 'rxjs/operators';
+import { AuthService } from 'src/services/auth.service';
 import { FirebaseService } from 'src/services/firebase.service';
 import { SnackBarService } from 'src/services/snack-bar.service';
 
@@ -31,14 +32,14 @@ export class SignInScreenComponent implements OnInit {
   signInForm: FormGroup;
 
   constructor(
-    private _firebase: FirebaseService,
+    private _auth: AuthService,
     private _fb: FormBuilder,
     private _snackBar: SnackBarService
   ) {
     this.signInForm = this._fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      returnSecureToken: [false],
+      email: ['teo@gmail.com', [Validators.required, Validators.email]],
+      password: ['123456', [Validators.required]],
+      rememberUser: [false],
     });
   }
 
@@ -61,12 +62,12 @@ export class SignInScreenComponent implements OnInit {
 
   signIn() {
     if (this.signInForm.valid) {
-      const { email, password, returnSecureToken } = this.signInForm.controls;
-      this._firebase
+      const { email, password, rememberUser } = this.signInForm.controls;
+      this._auth
         .signInWithEmailPassword({
           email: email.value,
           password: password.value,
-          returnSecureToken: returnSecureToken.value,
+          rememberUser: rememberUser.value,
         })
         .pipe(
           startWith(null),

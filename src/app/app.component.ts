@@ -1,11 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { BehaviorSubject, Observable, timer, zip } from 'rxjs';
 import { find } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
-import { FirebaseService } from 'src/services/firebase.service';
+import { DateService } from 'src/services/date.service';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 
 @Component({
@@ -27,15 +27,16 @@ export class AppComponent implements OnInit {
 
   constructor(
     private _auth: AuthService,
-    private _firebase: FirebaseService,
     private _router: Router,
-    private _location: Location
+    private _route: ActivatedRoute,
+    private _location: Location,
+    private _date: DateService
   ) {}
 
   ngOnInit() {
     this.setLoadingScreen();
     this.handleAuthStateChange();
-    this.checkFirebaseAuthToken();
+    this.checkAuthenticateWhenInitApp();
   }
 
   setLoadingScreen() {
@@ -47,15 +48,24 @@ export class AppComponent implements OnInit {
     );
   }
 
-  checkFirebaseAuthToken() {
+  checkAuthenticateWhenInitApp() {
+    const rememberUser = this._auth.getRememberUser();
     const refreshToken = this._auth.getRefreshToken();
-    if (refreshToken) {
-      this._firebase.exchangeWithRefreshToken(refreshToken).subscribe(
-        () => this._auth.setAuthState(AuthStateEnum.authenticated),
-        () => this._auth.setAuthState(AuthStateEnum.unAuthenticated)
-      );
-    } else {
-      this._auth.setAuthState(AuthStateEnum.unAuthenticated);
+    const expireTime = this._auth.getExpireTime();
+    const isExpired = expireTime && this._date.getTime() > expireTime;
+    switch (true) {
+      case rememberUser && refreshToken:
+        this._auth.signInWithToken(refreshToken!).subscribe();
+        break;
+      case !rememberUser && isExpired:
+        this._auth.signOut();
+        break;
+      case !rememberUser && !isExpired:
+        this._auth.setAuthState(AuthStateEnum.authenticated);
+        break;
+      default:
+        this._auth.setAuthState(AuthStateEnum.unAuthenticated);
+        break;
     }
   }
 
@@ -63,7 +73,10 @@ export class AppComponent implements OnInit {
     this.authState$.subscribe((state: AuthStateEnum) => {
       switch (state) {
         case AuthStateEnum.unAuthenticated:
-          this.navigateSignInPage();
+          this.navigateWhenUnAuthenticated();
+          break;
+        case AuthStateEnum.authenticated:
+          this.navigateWhenAuthenticated();
           break;
         default:
           break;
@@ -71,7 +84,16 @@ export class AppComponent implements OnInit {
     });
   }
 
-  navigateSignInPage() {
+  navigateWhenAuthenticated() {
+    const locationPath = this._location.path();
+    const { returnUrl } = this._route.snapshot.queryParams;
+    const isFromSignIn = locationPath.includes('/sign-in');
+    if (isFromSignIn) {
+      this._router.navigateByUrl(returnUrl || '');
+    }
+  }
+
+  navigateWhenUnAuthenticated() {
     const locationPath = this._location.path();
     const isFromOtherUrl = !locationPath.includes('/sign-in');
     if (isFromOtherUrl) {

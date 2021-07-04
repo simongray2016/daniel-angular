@@ -1,10 +1,11 @@
 export interface SignInBodyModel {
   email: string;
   password: string;
-  returnSecureToken: boolean;
+  returnSecureToken?: boolean;
+  rememberUser?: boolean;
 }
 
-export interface SignInResponeModel {
+export interface AuthenticatedDataModel {
   displayName?: string;
   email?: string;
   expiresIn: string;
@@ -17,4 +18,6 @@ export interface SignInResponeModel {
   projectId?: string;
   tokenType: string;
   userId: string;
+  rememberUser?: boolean;
+  expireTime?: number;
 }
