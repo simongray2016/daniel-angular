@@ -2,10 +2,11 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { BehaviorSubject, Observable, timer, zip } from 'rxjs';
+import { BehaviorSubject, interval, Observable, timer, zip } from 'rxjs';
 import { find } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { DateService } from 'src/services/date.service';
+import { ThemeModeService } from 'src/services/theme-mode.service';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 
 @Component({
@@ -25,18 +26,25 @@ export class AppComponent implements OnInit {
   loadingScreenSubject$ = new BehaviorSubject<boolean>(true);
   loadingScreen$ = this.loadingScreenSubject$.asObservable();
 
+  on = false;
+
   constructor(
     private _auth: AuthService,
     private _router: Router,
     private _route: ActivatedRoute,
     private _location: Location,
-    private _date: DateService
+    private _date: DateService,
+    private _themeMode: ThemeModeService
   ) {}
 
   ngOnInit() {
     this.setLoadingScreen();
     this.handleAuthStateChange();
     this.checkAuthenticateWhenInitApp();
+    interval(3000).subscribe(() => {
+      this.on = !this.on;
+      this._themeMode.toggleDarkMode(this.on);
+    });
   }
 
   setLoadingScreen() {
@@ -53,19 +61,23 @@ export class AppComponent implements OnInit {
     const refreshToken = this._auth.getRefreshToken();
     const expireTime = this._auth.getExpireTime();
     const isExpired = expireTime && this._date.getTime() > expireTime;
-    switch (true) {
-      case rememberUser && refreshToken:
-        this._auth.signInWithToken(refreshToken!).subscribe();
-        break;
-      case !rememberUser && isExpired:
-        this._auth.signOut();
-        break;
-      case !rememberUser && !isExpired:
-        this._auth.setAuthState(AuthStateEnum.authenticated);
-        break;
-      default:
-        this._auth.setAuthState(AuthStateEnum.unAuthenticated);
-        break;
+    if (refreshToken) {
+      switch (true) {
+        case rememberUser:
+          this._auth.signInWithToken(refreshToken!).subscribe();
+          break;
+        case !rememberUser && isExpired:
+          this._auth.signOut();
+          break;
+        case !rememberUser && !isExpired:
+          this._auth.setAuthState(AuthStateEnum.authenticated);
+          break;
+        default:
+          this._auth.setAuthState(AuthStateEnum.unAuthenticated);
+          break;
+      }
+    } else {
+      this._auth.setAuthState(AuthStateEnum.unAuthenticated);
     }
   }
 
@@ -87,16 +99,17 @@ export class AppComponent implements OnInit {
   navigateWhenAuthenticated() {
     const locationPath = this._location.path();
     const { returnUrl } = this._route.snapshot.queryParams;
-    const isFromSignIn = locationPath.includes('/sign-in');
-    if (isFromSignIn) {
+    const isFromSignInSignUp = locationPath.includes('/sign-in');
+    if (isFromSignInSignUp) {
       this._router.navigateByUrl(returnUrl || '');
     }
   }
 
   navigateWhenUnAuthenticated() {
     const locationPath = this._location.path();
-    const isFromOtherUrl = !locationPath.includes('/sign-in');
-    if (isFromOtherUrl) {
+    const isFromAuthenticatedUrl =
+      this.checkIsFromAuthenticatedUrl(locationPath);
+    if (isFromAuthenticatedUrl) {
       this._router.navigate(['/sign-in'], {
         queryParams: locationPath
           ? {
@@ -106,6 +119,16 @@ export class AppComponent implements OnInit {
       });
     } else {
       this._router.navigateByUrl(locationPath);
+    }
+  }
+
+  checkIsFromAuthenticatedUrl(path: string): boolean {
+    switch (true) {
+      case path.includes('/sign-in'):
+      case path.includes('/sign-up'):
+        return false;
+      default:
+        return true;
     }
   }
 }

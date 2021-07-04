@@ -12,44 +12,38 @@ import { AuthService } from 'src/services/auth.service';
 import { SnackBarService } from 'src/services/snack-bar.service';
 
 @Component({
-  selector: 'app-sign-in-screen',
-  templateUrl: './sign-in-screen.component.html',
-  styles: [
-    `
-      ::ng-deep {
-        .mat-progress-spinner circle,
-        .mat-spinner circle {
-          stroke: white;
-        }
-      }
-    `,
-  ],
+  selector: 'app-sign-up-screen',
+  templateUrl: './sign-up-screen.component.html',
 })
-export class SignInScreenComponent implements OnInit {
+export class SignUpScreenComponent implements OnInit {
   hidePassword = true;
   loading = false;
-  signInForm: FormGroup;
+  signUpForm: FormGroup;
 
   constructor(
     private _auth: AuthService,
     private _fb: FormBuilder,
     private _snackBar: SnackBarService
   ) {
-    this.signInForm = this._fb.group({
-      email: ['teo@gmail.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
-      rememberUser: [false],
+    this.signUpForm = this._fb.group({
+      fullName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
   ngOnInit(): void {}
 
+  get fullName() {
+    return this.signUpForm.controls.fullName;
+  }
+
   get email() {
-    return this.signInForm.controls.email;
+    return this.signUpForm.controls.email;
   }
 
   get password() {
-    return this.signInForm.controls.password;
+    return this.signUpForm.controls.password;
   }
 
   getErrorMessage(controls: AbstractControl): string {
@@ -60,8 +54,8 @@ export class SignInScreenComponent implements OnInit {
   }
 
   signIn() {
-    if (this.signInForm.valid) {
-      const { email, password, rememberUser } = this.signInForm.controls;
+    if (this.signUpForm.valid) {
+      const { email, password, rememberUser } = this.signUpForm.controls;
       this._auth
         .signInWithEmailPassword({
           email: email.value,
@@ -72,11 +66,11 @@ export class SignInScreenComponent implements OnInit {
           startWith(null),
           tap(() => {
             this.loading = true;
-            this.signInForm.disable();
+            this.signUpForm.disable();
           }),
           finalize(() => {
             this.loading = false;
-            this.signInForm.enable();
+            this.signUpForm.enable();
           }),
           catchError((err: HttpErrorResponse) => {
             this.handleSignInError(err);

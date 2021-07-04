@@ -33,15 +33,22 @@
         src="https://angular.io/assets/images/logos/angular/angular.svg"
         alt=""
       />
-      <div class="mt-10 font-bold text-3xl">Sign in</div>
+      <div class="mt-10 font-bold text-3xl">Sign up</div>
       <div class="flex">
         <div class="text-md">Don't have an account?</div>
-        <a routerLink="/sign-up" class="text-purple-500 ml-2 hover:underline"
-          >Sign up</a
+        <a routerLink="/sign-in" class="text-purple-500 ml-2 hover:underline"
+          >Sign in</a
         >
       </div>
-      <form [formGroup]="signInForm">
+      <form [formGroup]="signUpForm">
         <mat-form-field class="w-full mt-10" appearance="outline">
+          <mat-label>Full name</mat-label>
+          <input formControlName="fullName" matInput />
+          <mat-error *ngIf="email.invalid">{{
+            getErrorMessage(fullName)
+          }}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-full mt-5" appearance="outline">
           <mat-label>Email Address</mat-label>
           <input formControlName="email" matInput />
           <mat-error *ngIf="email.invalid">{{
@@ -68,12 +75,18 @@
           }}</mat-error>
         </mat-form-field>
         <div class="flex justify-between">
-          <mat-checkbox formControlName="rememberUser"
-            >Remember me</mat-checkbox
-          >
-          <a href="#" class="text-purple-500 ml-2 hover:underline"
-            >Forgot password?</a
-          >
+          <mat-checkbox>
+            <span class="whitespace-normal">
+              I agree to the
+              <a href="#" class="text-purple-500 hover:underline"
+                >Term of Service</a
+              >
+              and
+              <a href="#" class="text-purple-500 hover:underline"
+                >Privacy Policy</a
+              >
+            </span>
+          </mat-checkbox>
         </div>
         <button
           class="mt-8 w-full h-14 rounded-full flex justify-center items-center"
@@ -82,7 +95,7 @@
           color="primary"
           (click)="signIn()"
         >
-          <ng-container *ngIf="!loading">Sign in</ng-container>
+          <ng-container *ngIf="!loading">Sign up</ng-container>
           <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
         </button>
       </form>

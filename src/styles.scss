@@ -1,4 +1,9 @@
 @use '~@angular/material' as mat;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "./styles/index.scss";
+
 @include mat.core();
 
 $ng-app-primary: mat.define-palette(mat.$indigo-palette);
@@ -13,13 +18,24 @@ $ng-app-theme: mat.define-light-theme(
     ),
   )
 );
-
 @include mat.all-component-themes($ng-app-theme);
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import "./styles/index.scss";
+// Dark theme
+.dark {
+  $dark-theme: mat.define-dark-theme(
+    (
+      color: (
+        primary: $ng-app-primary,
+        accent: $ng-app-accent,
+        warn: $ng-app-warn,
+      ),
+    )
+  );
+
+  @include mat.all-component-themes($dark-theme);
+
+  @include applyDarkMode();
+}
 
 html,
 body {
@@ -27,8 +43,8 @@ body {
 }
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  font-size: .875rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
   color: #1e293b;
   box-sizing: border-box;
   display: flex;
