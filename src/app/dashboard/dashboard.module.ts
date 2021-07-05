@@ -5,6 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { DashboardScreenComponent } from './dashboard-screen/dashboard-screen.component';
 
@@ -16,6 +17,7 @@ import { DashboardScreenComponent } from './dashboard-screen/dashboard-screen.co
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    MatSidenavModule,
   ],
 })
 export class DashboardModule {}
