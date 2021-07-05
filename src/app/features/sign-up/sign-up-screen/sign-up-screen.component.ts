@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError, finalize, startWith, tap } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
@@ -19,11 +20,13 @@ export class SignUpScreenComponent implements OnInit {
   hidePassword = true;
   loading = false;
   signUpForm: FormGroup;
+  returnUrl = '';
 
   constructor(
     private _auth: AuthService,
     private _fb: FormBuilder,
-    private _snackBar: SnackBarService
+    private _snackBar: SnackBarService,
+    private _route: ActivatedRoute
   ) {
     this.signUpForm = this._fb.group({
       fullName: ['', [Validators.required]],
@@ -33,7 +36,9 @@ export class SignUpScreenComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.returnUrl = this._route.snapshot.queryParams.returnUrl || '';
+  }
 
   get fullName() {
     return this.signUpForm.controls.fullName;
@@ -56,12 +61,12 @@ export class SignUpScreenComponent implements OnInit {
 
   signUp() {
     if (this.signUpForm.valid) {
-      const { email, password, rememberUser } = this.signUpForm.controls;
+      const { email, password } = this.signUpForm.controls;
       this._auth
         .signUpWithEmailPassword({
           email: email.value,
           password: password.value,
-          rememberUser: rememberUser.value,
+          rememberUser: true,
         })
         .pipe(
           startWith(null),

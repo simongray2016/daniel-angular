@@ -99,7 +99,8 @@ export class AppComponent implements OnInit {
   navigateWhenAuthenticated() {
     const locationPath = this._location.path();
     const { returnUrl } = this._route.snapshot.queryParams;
-    const isFromSignInSignUp = locationPath.includes('/sign-in');
+    const isFromSignInSignUp =
+      locationPath.includes('/sign-in') || locationPath.includes('/sign-up');
     if (isFromSignInSignUp) {
       this._router.navigateByUrl(returnUrl || '');
     }

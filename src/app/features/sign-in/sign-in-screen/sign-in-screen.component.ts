@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError, finalize, startWith, tap } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
@@ -29,11 +30,13 @@ export class SignInScreenComponent implements OnInit {
   hidePassword = true;
   loading = false;
   signInForm: FormGroup;
+  returnUrl = '';
 
   constructor(
     private _auth: AuthService,
     private _fb: FormBuilder,
-    private _snackBar: SnackBarService
+    private _snackBar: SnackBarService,
+    private _route: ActivatedRoute
   ) {
     this.signInForm = this._fb.group({
       email: ['teo@gmail.com', [Validators.required, Validators.email]],
@@ -42,7 +45,9 @@ export class SignInScreenComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.returnUrl = this._route.snapshot.queryParams.returnUrl || '';
+  }
 
   get email() {
     return this.signInForm.controls.email;

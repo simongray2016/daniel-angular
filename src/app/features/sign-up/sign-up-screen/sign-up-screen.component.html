@@ -17,8 +17,6 @@
       h-full
       sm:py-5
       lg:w-1/2 lg:justify-end
-      border-r border-transparent
-      lg:dark:border-gray-600
     "
   >
     <div
@@ -36,7 +34,10 @@
       <div class="mt-10 font-bold text-3xl">Sign up</div>
       <div class="flex">
         <div class="text-md">Don't have an account?</div>
-        <a routerLink="/sign-in" class="text-purple-500 ml-2 hover:underline"
+        <a
+          [routerLink]="['/sign-in']"
+          [queryParams]="returnUrl ? {returnUrl} : {}"
+          class="text-purple-500 ml-2 hover:underline"
           >Sign in</a
         >
       </div>
@@ -102,7 +103,16 @@
     </div>
   </div>
   <div
-    class="flex-col justify-center hidden bg-gray-800 px-24 lg:flex lg:w-1/2"
+    class="
+      flex-col
+      justify-center
+      hidden
+      bg-gray-800
+      px-24
+      lg:flex lg:w-1/2
+      border-l border-transparent
+      lg:dark:border-gray-600
+    "
   >
     <h1 class="text-white text-5xl font-bold">
       Welcome to <br />
