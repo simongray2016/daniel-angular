@@ -1,5 +1,5 @@
 <mat-sidenav-container class="h-screen">
-  <mat-sidenav mode="side" opened="true">
+  <mat-sidenav [mode]="sidenavMode" opened="true">
     <div class="w-72 h-screen overflow-y-auto bg-gray-900"></div>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -10,6 +10,9 @@
       <span class="flex-grow"></span>
       <button mat-icon-button (click)="toggleFullscreen()">
         <mat-icon class="text-white">fullscreen</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon class="text-white">search</mat-icon>
       </button>
     </mat-toolbar>
   </mat-sidenav-content>
