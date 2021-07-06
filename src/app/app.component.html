@@ -1,5 +1,6 @@
 <app-loading-screen *ngIf="loadingScreen$ | async"></app-loading-screen>
 <mat-sidenav-container class="h-screen">
+  <!-- Sidenav -->
   <mat-sidenav
     [mode]="sidenavMode"
     opened="true"
@@ -7,27 +8,44 @@
   >
     <div class="w-72 h-screen overflow-y-auto bg-gray-900"></div>
   </mat-sidenav>
-  <mat-sidenav-content>
+
+  <mat-sidenav-content class="relative">
+    <!-- Tool bar -->
     <mat-toolbar
       class="bg-gray-900"
       *ngIf="(authState$ | async) === authenticated"
     >
-      <button mat-icon-button (click)="toggleSidenav()">
-        <mat-icon class="text-white">menu</mat-icon>
+      <button class="mx-1" mat-icon-button (click)="toggleSidenav()">
+        <mat-icon class="text-white" matTooltip="Menu">menu</mat-icon>
       </button>
       <span class="flex-grow"></span>
-      <button mat-icon-button (click)="toggleFullscreen()">
+      <button
+        class="mx-1"
+        mat-icon-button
+        matTooltip="Fullscreen"
+        (click)="toggleFullscreen()"
+      >
         <mat-icon class="text-white">fullscreen</mat-icon>
       </button>
-      <button mat-icon-button>
+      <button
+        class="mx-1"
+        mat-icon-button
+        matTooltip="Search"
+        (click)="toggleSearchBar()"
+      >
         <mat-icon class="text-white">search</mat-icon>
       </button>
-      <button mat-icon-button>
+      <button class="mx-1" mat-icon-button matTooltip="Inbox">
         <mat-icon matBadge="5" matBadgeSize="small" class="text-white"
           >inbox</mat-icon
         >
       </button>
-      <button mat-icon-button (click)="toggleDarkMode()">
+      <button
+        class="mx-1"
+        mat-icon-button
+        (click)="toggleDarkMode()"
+        matTooltip="Toggle dark mode"
+      >
         <mat-icon
           [ngClass]="
             (darkMode$ | async) ? 'text-purple-900' : 'text-yellow-400'
@@ -36,6 +54,9 @@
         >
       </button>
     </mat-toolbar>
+
+    <!-- Search bar -->
+    <app-search></app-search>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

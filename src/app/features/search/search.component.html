@@ -1,1 +1,24 @@
-<p>search works!</p>
+<div
+  style="height: 64px"
+  class="
+    flex
+    items-center
+    px-8
+    absolute
+    top-0
+    left-0
+    w-full
+    bg-white
+    dark:bg-gray-800
+    border-b border-transparent
+    lg:dark:border-gray-600
+  "
+  *ngIf="isOpenSearchBar$ | async"
+  @sideUpTrigger
+>
+  <mat-icon>search</mat-icon>
+  <input class="flex-grow bg-transparent outline-none ml-2" type="text" />
+  <button mat-icon-button (click)="toggleSearchBar()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SearchModule } from './features/search/search.module';
 
 import { httpInterceptorProviders } from 'src/shared/interceptors';
 import { environment } from 'src/environments/environment';
@@ -36,6 +38,8 @@ import { ErrorScreenComponent } from './components/error-screen/error-screen.com
     MatButtonModule,
     MatSidenavModule,
     MatBadgeModule,
+    MatTooltipModule,
+    SearchModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent],

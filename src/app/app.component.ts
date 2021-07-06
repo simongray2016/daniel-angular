@@ -15,6 +15,7 @@ import { find, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { DateService } from 'src/services/date.service';
 import { MediaService } from 'src/services/media.service';
+import { SearchService } from 'src/services/search.service';
 import { ThemeModeService } from 'src/services/theme-mode.service';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 
@@ -50,7 +51,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private _location: Location,
     private _date: DateService,
     private _themeMode: ThemeModeService,
-    private _media: MediaService
+    private _media: MediaService,
+    private _search: SearchService
   ) {
     this.darkMode$ = this._themeMode.darkMode$;
   }
@@ -59,9 +61,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.setLoadingScreen();
     this.handleAuthStateChange();
     this.checkAuthenticateWhenInitApp();
-    interval(3000).subscribe(() => {
-      this._themeMode.toggleDarkMode();
-    });
     this.handleMediumScreenSize();
   }
 
@@ -179,5 +178,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   toggleDarkMode() {
     this._themeMode.toggleDarkMode();
+  }
+
+  toggleSearchBar() {
+    this._search.toggleSearchBar();
   }
 }

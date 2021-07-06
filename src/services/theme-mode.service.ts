@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { skip } from 'rxjs/operators';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
@@ -16,11 +15,11 @@ export class ThemeModeService {
   }
 
   applyDarkMode() {
-    this.darkModeSubject$.pipe(skip(1)).subscribe((darkMode) => {
+    this.darkModeSubject$.subscribe((darkMode) => {
       if (darkMode) {
-        document.documentElement.classList.remove('dark');
-      } else {
         document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
     });
   }
