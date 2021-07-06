@@ -1,11 +1,20 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import { BehaviorSubject, interval, Observable, timer, zip } from 'rxjs';
-import { find } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  interval,
+  Observable,
+  Subject,
+  timer,
+  zip,
+} from 'rxjs';
+import { find, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { DateService } from 'src/services/date.service';
+import { MediaService } from 'src/services/media.service';
 import { ThemeModeService } from 'src/services/theme-mode.service';
 import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 
@@ -20,13 +29,19 @@ import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
     `,
   ],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSidenav)
+  matSidenav!: MatSidenav;
+
   @Select(AuthState)
   authState$!: Observable<AuthStateEnum>;
+  darkMode$: Observable<boolean>;
+  authenticated = AuthStateEnum.authenticated;
   loadingScreenSubject$ = new BehaviorSubject<boolean>(true);
   loadingScreen$ = this.loadingScreenSubject$.asObservable();
+  destroyed$ = new Subject<any>();
 
-  on = false;
+  sidenavMode: MatDrawerMode = 'side';
 
   constructor(
     private _auth: AuthService,
@@ -34,17 +49,24 @@ export class AppComponent implements OnInit {
     private _route: ActivatedRoute,
     private _location: Location,
     private _date: DateService,
-    private _themeMode: ThemeModeService
-  ) {}
+    private _themeMode: ThemeModeService,
+    private _media: MediaService
+  ) {
+    this.darkMode$ = this._themeMode.darkMode$;
+  }
 
   ngOnInit() {
     this.setLoadingScreen();
     this.handleAuthStateChange();
     this.checkAuthenticateWhenInitApp();
     interval(3000).subscribe(() => {
-      this.on = !this.on;
-      this._themeMode.toggleDarkMode(this.on);
+      this._themeMode.toggleDarkMode();
     });
+    this.handleMediumScreenSize();
+  }
+
+  ngOnDestroy() {
+    this.destroyed$.next(null);
   }
 
   setLoadingScreen() {
@@ -131,5 +153,31 @@ export class AppComponent implements OnInit {
       default:
         return true;
     }
+  }
+
+  handleMediumScreenSize() {
+    this._media
+      .handleMediaBreakpoint('md')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((isInBreakpoint) => {
+        if (isInBreakpoint) {
+          this.sidenavMode = 'side';
+        } else {
+          this.sidenavMode = 'over';
+          this.matSidenav.close();
+        }
+      });
+  }
+
+  toggleSidenav() {
+    this.matSidenav.toggle();
+  }
+
+  toggleFullscreen() {
+    this._media.toggleFullscreen();
+  }
+
+  toggleDarkMode() {
+    this._themeMode.toggleDarkMode();
   }
 }

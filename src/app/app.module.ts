@@ -6,6 +6,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatBadgeModule } from '@angular/material/badge';
 
 import { httpInterceptorProviders } from 'src/shared/interceptors';
 import { environment } from 'src/environments/environment';
@@ -26,6 +31,11 @@ import { ErrorScreenComponent } from './components/error-screen/error-screen.com
     BrowserAnimationsModule,
     HttpClientModule,
     MatSnackBarModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatBadgeModule,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent],
