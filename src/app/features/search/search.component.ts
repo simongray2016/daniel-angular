@@ -1,40 +1,65 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-} from '@angular/animations';
-import { Observable } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import { SearchService } from 'src/services/search.service';
+import { FormControl } from '@angular/forms';
+import { switchMap, tap, throttleTime } from 'rxjs/operators';
+import { SlideYTrigger } from 'src/shared/animations/slide.animation';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  animations: [
-    trigger('sideUpTrigger', [
-      transition(':enter', [
-        style({ transform: 'translateY(-100%)' }),
-        animate('200ms', style({ transform: 'translateY(0)' })),
-      ]),
-      transition(':leave', [
-        style({ transform: 'translateY(0)' }),
-        animate('200ms', style({ transform: 'translateY(-100%)' })),
-      ]),
-    ]),
-  ],
+  animations: [SlideYTrigger],
 })
 export class SearchComponent implements OnInit {
-  isOpenSearchBar$: Observable<boolean>;
+  searchResult$!: Observable<any[]>;
 
-  constructor(private _search: SearchService) {
-    this.isOpenSearchBar$ = this._search.isOpenSearchBar$;
+  isOpenSearchBar = true;
+  haveResult = false;
+  searchControl = new FormControl('');
+  errorMessage: string | null = null;
+
+  constructor(private _search: SearchService) {}
+
+  ngOnInit(): void {
+    this.onSearchValueChanges();
   }
 
-  ngOnInit(): void {}
+  onSearchValueChanges() {
+    this.searchResult$ = this.searchControl.valueChanges.pipe(
+      throttleTime(200),
+      switchMap((searchString: string) => {
+        if (searchString.trim().length > 1) {
+          this.haveResult = true;
+          return this._search.getSearchresult(searchString.trim());
+        } else {
+          this.haveResult = false;
+          return of([]);
+        }
+      }),
+      tap(
+        (res) =>
+          (this.haveResult = !!res.length && res.some((cat) => cat.list.length))
+      )
+    );
+  }
 
-  toggleSearchBar() {
-    this._search.toggleSearchBar();
+  onClickSearchResultItem(category: string, item: any) {
+    switch (category) {
+      case 'contacts':
+        break;
+      case 'pages':
+        break;
+      case 'tasks':
+        break;
+      default:
+        break;
+    }
+    this.close();
+  }
+
+  close() {
+    this.searchControl.setValue('');
+    this.isOpenSearchBar = false;
+    timer(200).subscribe(() => this._search.toggleSearchBar());
   }
 }

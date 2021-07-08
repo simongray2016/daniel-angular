@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @Select(AuthState)
   authState$!: Observable<AuthStateEnum>;
   darkMode$: Observable<boolean>;
+  isOpenSearchBar$: Observable<boolean>;
   authenticated = AuthStateEnum.authenticated;
   loadingScreenSubject$ = new BehaviorSubject<boolean>(true);
   loadingScreen$ = this.loadingScreenSubject$.asObservable();
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private _search: SearchService
   ) {
     this.darkMode$ = this._themeMode.darkMode$;
+    this.isOpenSearchBar$ = this._search.isOpenSearchBar$;
   }
 
   ngOnInit() {
