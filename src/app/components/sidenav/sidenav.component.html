@@ -1,0 +1,63 @@
+<div class="w-72 h-screen overflow-y-auto bg-gray-900">
+  <div class="flex justify-between items-center h-16 p-4">
+    <img
+      class="h-10 w-10"
+      src="https://angular.io/assets/images/logos/angular/angular.svg"
+      alt=""
+    />
+    <button mat-icon-button>
+      <mat-icon class="text-gray-400" matBadge="1" matBadgeSize="small">
+        notifications
+      </mat-icon>
+    </button>
+  </div>
+  <div class="flex flex-col items-center p-4">
+    <div
+      class="
+        flex
+        items-center
+        justify-center
+        rounded-full
+        overflow-hidden
+        h-24
+        w-24
+      "
+    >
+      <img
+        class="h-24 w-24"
+        src="https://angular.io/assets/images/logos/angular/angular.svg"
+        alt=""
+      />
+    </div>
+    <div class="mt-6 text-white font-bold">Brian Hughes</div>
+    <div class="text-gray-400">hughes.brian@company.com</div>
+  </div>
+  <div class="mt-6" *ngFor="let group of menuListData">
+    <div class="mx-3 px-4 py-2">
+      <div class="font-bold text-purple-500">
+        {{ group.groupName | uppercase }}
+      </div>
+      <div class="text-xs text-gray-600 font-bold">{{ group.description }}</div>
+    </div>
+    <a
+      class="
+        flex
+        items-center
+        rounded-md
+        mx-3
+        mb-1
+        mr-4
+        p-3
+        hover:bg-white hover:bg-opacity-5
+        cursor-pointer
+        group
+      "
+      *ngFor="let item of group.listItems"
+    >
+      <mat-icon class="text-gray-400 group-hover:text-white mr-4">
+        {{ item.matIcon }}
+      </mat-icon>
+      <div class="text-gray-400 group-hover:text-white">{{ item.name }}</div>
+    </a>
+  </div>
+</div>

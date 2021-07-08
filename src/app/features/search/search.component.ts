@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, of, timer } from 'rxjs';
 import { SearchService } from 'src/services/search.service';
 import { FormControl } from '@angular/forms';
-import { switchMap, tap, throttleTime } from 'rxjs/operators';
+import { debounceTime, switchMap, tap } from 'rxjs/operators';
 import { SlideYTrigger } from 'src/shared/animations/slide.animation';
 
 @Component({
@@ -26,7 +26,7 @@ export class SearchComponent implements OnInit {
 
   onSearchValueChanges() {
     this.searchResult$ = this.searchControl.valueChanges.pipe(
-      throttleTime(200),
+      debounceTime(200),
       switchMap((searchString: string) => {
         if (searchString.trim().length > 1) {
           this.haveResult = true;

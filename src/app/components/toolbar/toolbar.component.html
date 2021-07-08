@@ -1,0 +1,39 @@
+<mat-toolbar class="bg-gray-900 h-16">
+  <button class="mx-1" mat-icon-button (click)="onToggleSidenav()">
+    <mat-icon class="text-gray-400" matTooltip="Menu">menu</mat-icon>
+  </button>
+  <span class="flex-grow"></span>
+  <button
+    class="mx-1"
+    mat-icon-button
+    matTooltip="Fullscreen"
+    (click)="toggleFullscreen()"
+  >
+    <mat-icon class="text-gray-400">fullscreen</mat-icon>
+  </button>
+  <button
+    class="mx-1"
+    mat-icon-button
+    matTooltip="Search"
+    (click)="toggleSearchBar()"
+  >
+    <mat-icon class="text-gray-400">search</mat-icon>
+  </button>
+  <button class="mx-1" mat-icon-button matTooltip="Inbox">
+    <mat-icon matBadge="5" matBadgeSize="small" class="text-gray-400"
+      >inbox</mat-icon
+    >
+  </button>
+  <button
+    class="mx-1"
+    mat-icon-button
+    (click)="toggleDarkMode()"
+    matTooltip="Toggle dark mode"
+  >
+    <mat-icon
+      [ngClass]="(darkMode$ | async) ? 'text-purple-900' : 'text-yellow-400'"
+    >
+      {{ (darkMode$ | async) ? "dark_mode" : "light_mode" }}
+    </mat-icon>
+  </button>
+</mat-toolbar>

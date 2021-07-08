@@ -6,54 +6,15 @@
     opened="true"
     *ngIf="(authState$ | async) === authenticated"
   >
-    <div class="w-72 h-screen overflow-y-auto bg-gray-900"></div>
+    <app-sidenav></app-sidenav>
   </mat-sidenav>
 
   <mat-sidenav-content class="relative">
     <!-- Tool bar -->
-    <mat-toolbar
-      class="bg-gray-900 h-16"
+    <app-toolbar
       *ngIf="(authState$ | async) === authenticated"
-    >
-      <button class="mx-1" mat-icon-button (click)="toggleSidenav()">
-        <mat-icon class="text-white" matTooltip="Menu">menu</mat-icon>
-      </button>
-      <span class="flex-grow"></span>
-      <button
-        class="mx-1"
-        mat-icon-button
-        matTooltip="Fullscreen"
-        (click)="toggleFullscreen()"
-      >
-        <mat-icon class="text-white">fullscreen</mat-icon>
-      </button>
-      <button
-        class="mx-1"
-        mat-icon-button
-        matTooltip="Search"
-        (click)="toggleSearchBar()"
-      >
-        <mat-icon class="text-white">search</mat-icon>
-      </button>
-      <button class="mx-1" mat-icon-button matTooltip="Inbox">
-        <mat-icon matBadge="5" matBadgeSize="small" class="text-white"
-          >inbox</mat-icon
-        >
-      </button>
-      <button
-        class="mx-1"
-        mat-icon-button
-        (click)="toggleDarkMode()"
-        matTooltip="Toggle dark mode"
-      >
-        <mat-icon
-          [ngClass]="
-            (darkMode$ | async) ? 'text-purple-900' : 'text-yellow-400'
-          "
-          >{{ (darkMode$ | async) ? "dark_mode" : "light_mode" }}</mat-icon
-        >
-      </button>
-    </mat-toolbar>
+      (toggleSidenav)="matSidenav.toggle()"
+    ></app-toolbar>
 
     <!-- Search bar -->
     <app-search *ngIf="isOpenSearchBar$ | async"></app-search>

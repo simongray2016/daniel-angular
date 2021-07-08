@@ -21,9 +21,17 @@ import { AuthState } from 'src/shared/states/auth/auth.state';
 import { AppComponent } from './app.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { ErrorScreenComponent } from './components/error-screen/error-screen.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
 @NgModule({
-  declarations: [AppComponent, LoadingScreenComponent, ErrorScreenComponent],
+  declarations: [
+    AppComponent,
+    LoadingScreenComponent,
+    ErrorScreenComponent,
+    ToolbarComponent,
+    SidenavComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

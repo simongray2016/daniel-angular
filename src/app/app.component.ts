@@ -3,14 +3,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
-import {
-  BehaviorSubject,
-  interval,
-  Observable,
-  Subject,
-  timer,
-  zip,
-} from 'rxjs';
+import { BehaviorSubject, Observable, Subject, timer, zip } from 'rxjs';
 import { find, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/services/auth.service';
 import { DateService } from 'src/services/date.service';
@@ -168,21 +161,5 @@ export class AppComponent implements OnInit, OnDestroy {
           this.matSidenav.close();
         }
       });
-  }
-
-  toggleSidenav() {
-    this.matSidenav.toggle();
-  }
-
-  toggleFullscreen() {
-    this._media.toggleFullscreen();
-  }
-
-  toggleDarkMode() {
-    this._themeMode.toggleDarkMode();
-  }
-
-  toggleSearchBar() {
-    this._search.toggleSearchBar();
   }
 }
