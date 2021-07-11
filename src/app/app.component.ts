@@ -37,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   destroyed$ = new Subject<any>();
 
   sidenavMode: MatDrawerMode = 'side';
+  preOpeningSidenav = true;
 
   constructor(
     private _auth: AuthService,
@@ -50,13 +51,13 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.darkMode$ = this._themeMode.darkMode$;
     this.isOpenSearchBar$ = this._search.isOpenSearchBar$;
+    this.handleLargeScreenSize();
   }
 
   ngOnInit() {
     this.setLoadingScreen();
     this.handleAuthStateChange();
     this.checkAuthenticateWhenInitApp();
-    this.handleMediumScreenSize();
   }
 
   ngOnDestroy() {
@@ -149,16 +150,18 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleMediumScreenSize() {
+  handleLargeScreenSize() {
     this._media
-      .handleMediaBreakpoint('md')
+      .handleMediaBreakpoint('lg')
       .pipe(takeUntil(this.destroyed$))
       .subscribe((isInBreakpoint) => {
         if (isInBreakpoint) {
           this.sidenavMode = 'side';
+          this.preOpeningSidenav = true;
         } else {
           this.sidenavMode = 'over';
-          this.matSidenav.close();
+          this.matSidenav?.close();
+          this.preOpeningSidenav = false;
         }
       });
   }

@@ -13,7 +13,7 @@ export const MenuListData: MenuListModel = [
       {
         matIcon: 'pie_chart',
         name: 'Analytics',
-        path: '/dashboard',
+        path: '/asdasd',
       },
     ],
   },
@@ -24,17 +24,17 @@ export const MenuListData: MenuListModel = [
       {
         matIcon: 'calendar_today',
         name: 'Calendar',
-        path: '/dashboard',
+        path: '/safsa',
       },
       {
         matIcon: 'question_answer',
         name: 'Chat',
-        path: '/dashboard',
+        path: '/asfsa',
       },
       {
         matIcon: 'cloud',
         name: 'File manager',
-        path: '/dashboard',
+        path: '/asfsa',
       },
     ],
   },

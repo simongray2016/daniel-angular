@@ -2,14 +2,15 @@
 <mat-sidenav-container class="h-screen">
   <!-- Sidenav -->
   <mat-sidenav
+    class="border-r border-gray-900 dark:border-gray-600"
     [mode]="sidenavMode"
-    opened="true"
+    [opened]="preOpeningSidenav"
     *ngIf="(authState$ | async) === authenticated"
   >
     <app-sidenav></app-sidenav>
   </mat-sidenav>
 
-  <mat-sidenav-content class="relative">
+  <mat-sidenav-content class="relative bg-gray-100 dark:bg-gray-900">
     <!-- Tool bar -->
     <app-toolbar
       *ngIf="(authState$ | async) === authenticated"
@@ -18,6 +19,8 @@
 
     <!-- Search bar -->
     <app-search *ngIf="isOpenSearchBar$ | async"></app-search>
+
+    <!-- Content -->
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

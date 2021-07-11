@@ -1,1 +1,69 @@
-<div>This is dashboard</div>
+<div class="w-full">
+  <div
+    class="
+      flex flex-wrap
+      items-center
+      justify-between
+      w-full
+      p-6
+      sm:p-8
+      border-b border-gray-600
+      bg-gray-800
+    "
+  >
+    <div class="flex items-center mb-5 mr-5">
+      <div
+        class="
+          rounded-full
+          w-16
+          h-16
+          overflow-hidden
+          flex
+          justify-center
+          items-center
+        "
+      >
+        <img
+          class="w-16 h-16"
+          src="https://angular.io/assets/images/logos/angular/angular.svg"
+          alt=""
+        />
+      </div>
+      <div class="ml-6">
+        <div class="text-white text-lg font-bold">Welcome back, Daniel</div>
+        <div class="text-gray-400">You have 2 new messages</div>
+      </div>
+    </div>
+    <div class="flex-items-center">
+      <button class="rounded-full bg-gray-600 text-white" mat-flat-button>
+        <mat-icon>email</mat-icon>
+        <span class="ml-3">Messages</span>
+      </button>
+      <button class="rounded-full ml-4" mat-flat-button color="primary">
+        <mat-icon>settings</mat-icon>
+        <span class="ml-3">Settings</span>
+      </button>
+    </div>
+  </div>
+  <div class="p-5">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4">
+      <ng-container *ngFor="let data of overviewData">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title class="text-lg">{{ data.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="flex flex-col items-center">
+              <div class="text-6xl font-bold" [ngClass]="[data.colorClass]">
+                {{ data.number }}
+              </div>
+              <div class="text-xl" [ngClass]="[data.colorClass]">
+                {{ data.unit }}
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </div>
+</div>
