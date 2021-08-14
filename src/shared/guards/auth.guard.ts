@@ -1,11 +1,14 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
+  ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivate,
   CanActivateChild,
   CanDeactivate,
   CanLoad,
   Route,
+  Router,
   RouterStateSnapshot,
   UrlSegment,
   UrlTree,
@@ -24,6 +27,31 @@ export class AuthGuard
   @Select(AuthState)
   authState$!: Observable<AuthStateEnum>;
 
+  constructor(private _router: Router, private _location: Location) {}
+
+  authStateChange() {
+    return this.authState$.pipe(
+      map((state) => {
+        switch (state) {
+          case AuthStateEnum.unAuthenticated:
+            const locationPath = this._location.path();
+            this._router.navigate(['/sign-in'], {
+              queryParams: locationPath
+                ? {
+                    returnUrl: locationPath,
+                  }
+                : {},
+            });
+            break;
+          case AuthStateEnum.authenticated:
+          default:
+            break;
+        }
+        return state === AuthStateEnum.authenticated;
+      })
+    );
+  }
+
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -32,9 +60,7 @@ export class AuthGuard
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authState$.pipe(
-      map((state) => state === AuthStateEnum.authenticated)
-    );
+    return this.authStateChange();
   }
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
@@ -66,8 +92,6 @@ export class AuthGuard
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authState$.pipe(
-      map((state) => state === AuthStateEnum.authenticated)
-    );
+    return this.authStateChange();
   }
 }

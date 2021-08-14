@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 import { ErrorScreenComponent } from './components/error-screen/error-screen.component';
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'dashboard',
+    redirectTo: 'music',
   },
   {
     path: 'sign-in',
@@ -19,9 +20,10 @@ const routes: Routes = [
       import('./features/sign-up/sign-up.module').then((m) => m.SignUpModule),
   },
   {
-    path: 'dashboard',
+    path: 'music',
     loadChildren: () =>
-      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+      import('./features/music/music.module').then((m) => m.MusicModule),
+    canLoad: [AuthGuard],
   },
   {
     path: '404-not-found',

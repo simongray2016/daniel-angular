@@ -25,8 +25,7 @@ export class SignUpScreenComponent implements OnInit {
   constructor(
     private _auth: AuthService,
     private _fb: FormBuilder,
-    private _snackBar: SnackBarService,
-    private _route: ActivatedRoute
+    private _snackBar: SnackBarService
   ) {
     this.signUpForm = this._fb.group({
       fullName: ['', [Validators.required]],
@@ -36,9 +35,7 @@ export class SignUpScreenComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.returnUrl = this._route.snapshot.queryParams.returnUrl || '';
-  }
+  ngOnInit(): void {}
 
   get fullName() {
     return this.signUpForm.controls.fullName;

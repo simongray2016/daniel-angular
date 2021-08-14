@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import {
   SignInBodyModel,
   AuthenticatedDataModel,
   SignUpBodyModal,
-} from 'src/models/authmodel';
+} from 'src/models/auth.model';
 import { SetAuthState } from 'src/shared/states/auth/auth.actions';
 import { AuthStateEnum } from 'src/shared/states/auth/auth.state';
 import { DateService } from './date.service';
@@ -22,11 +23,13 @@ export class AuthService {
     private _localStorage: LocalStorageService,
     private _store: Store,
     private _firebase: FirebaseService,
-    private _date: DateService
+    private _date: DateService,
+    private _router: Router
   ) {}
 
   signInWithEmailPassword(
-    signInData: SignInBodyModel
+    signInData: SignInBodyModel,
+    returnUrl: string = ''
   ): Observable<AuthenticatedDataModel> {
     return this._firebase.signInWithEmailPassword(signInData).pipe(
       map((res: AuthenticatedDataModel) => {
@@ -35,6 +38,7 @@ export class AuthService {
           rememberUser: signInData.rememberUser,
         });
         this.setAuthState(AuthStateEnum.authenticated);
+        this._router.navigate([returnUrl], { replaceUrl: true });
         return res;
       })
     );

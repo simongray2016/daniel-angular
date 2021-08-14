@@ -23,6 +23,7 @@ import { LoadingScreenComponent } from './components/loading-screen/loading-scre
 import { ErrorScreenComponent } from './components/error-screen/error-screen.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { AuthGuard } from 'src/shared/guards/auth.guard';
 
 @NgModule({
   declarations: [

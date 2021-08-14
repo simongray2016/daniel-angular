@@ -9,7 +9,7 @@ import {
   SignInBodyModel,
   AuthenticatedDataModel,
   SignUpBodyModal,
-} from '../models/authmodel';
+} from '../models/auth.model';
 @Injectable({
   providedIn: 'root',
 })

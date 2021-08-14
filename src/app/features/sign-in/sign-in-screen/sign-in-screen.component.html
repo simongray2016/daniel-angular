@@ -36,7 +36,7 @@
         <div class="text-md">Don't have an account?</div>
         <a
           [routerLink]="['/sign-up']"
-          [queryParams]="returnUrl ? {returnUrl} : {}"
+          [queryParamsHandling]="'merge'"
           class="text-purple-500 ml-2 hover:underline"
           >Sign up</a
         >

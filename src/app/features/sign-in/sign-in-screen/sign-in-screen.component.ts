@@ -68,11 +68,14 @@ export class SignInScreenComponent implements OnInit {
     if (this.signInForm.valid) {
       const { email, password, rememberUser } = this.signInForm.controls;
       this._auth
-        .signInWithEmailPassword({
-          email: email.value,
-          password: password.value,
-          rememberUser: rememberUser.value,
-        })
+        .signInWithEmailPassword(
+          {
+            email: email.value,
+            password: password.value,
+            rememberUser: rememberUser.value,
+          },
+          this.returnUrl
+        )
         .pipe(
           startWith(null),
           tap(() => {

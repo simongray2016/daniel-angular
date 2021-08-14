@@ -1,7 +1,5 @@
-import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDrawerMode, MatSidenav } from '@angular/material/sidenav';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { BehaviorSubject, Observable, Subject, timer, zip } from 'rxjs';
 import { find, takeUntil } from 'rxjs/operators';
@@ -41,9 +39,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private _auth: AuthService,
-    private _router: Router,
-    private _route: ActivatedRoute,
-    private _location: Location,
     private _date: DateService,
     private _themeMode: ThemeModeService,
     private _media: MediaService,
@@ -56,7 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setLoadingScreen();
-    this.handleAuthStateChange();
     this.checkAuthenticateWhenInitApp();
   }
 
@@ -95,58 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     } else {
       this._auth.setAuthState(AuthStateEnum.unAuthenticated);
-    }
-  }
-
-  handleAuthStateChange() {
-    this.authState$.subscribe((state: AuthStateEnum) => {
-      switch (state) {
-        case AuthStateEnum.unAuthenticated:
-          this.navigateWhenUnAuthenticated();
-          break;
-        case AuthStateEnum.authenticated:
-          this.navigateWhenAuthenticated();
-          break;
-        default:
-          break;
-      }
-    });
-  }
-
-  navigateWhenAuthenticated() {
-    const locationPath = this._location.path();
-    const { returnUrl } = this._route.snapshot.queryParams;
-    const isFromSignInSignUp =
-      locationPath.includes('/sign-in') || locationPath.includes('/sign-up');
-    if (isFromSignInSignUp) {
-      this._router.navigateByUrl(returnUrl || '');
-    }
-  }
-
-  navigateWhenUnAuthenticated() {
-    const locationPath = this._location.path();
-    const isFromAuthenticatedUrl =
-      this.checkIsFromAuthenticatedUrl(locationPath);
-    if (isFromAuthenticatedUrl) {
-      this._router.navigate(['/sign-in'], {
-        queryParams: locationPath
-          ? {
-              returnUrl: locationPath,
-            }
-          : {},
-      });
-    } else {
-      this._router.navigateByUrl(locationPath);
-    }
-  }
-
-  checkIsFromAuthenticatedUrl(path: string): boolean {
-    switch (true) {
-      case path.includes('/sign-in'):
-      case path.includes('/sign-up'):
-        return false;
-      default:
-        return true;
     }
   }
 
