@@ -1,22 +1,17 @@
-import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivate,
   CanActivateChild,
   CanDeactivate,
   CanLoad,
   Route,
-  Router,
   RouterStateSnapshot,
   UrlSegment,
   UrlTree,
 } from '@angular/router';
-import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AuthState, AuthStateEnum } from '../states/auth/auth.state';
+import { AuthService } from 'src/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,33 +19,7 @@ import { AuthState, AuthStateEnum } from '../states/auth/auth.state';
 export class AuthGuard
   implements CanActivate, CanActivateChild, CanDeactivate<unknown>, CanLoad
 {
-  @Select(AuthState)
-  authState$!: Observable<AuthStateEnum>;
-
-  constructor(private _router: Router, private _location: Location) {}
-
-  authStateChange() {
-    return this.authState$.pipe(
-      map((state) => {
-        switch (state) {
-          case AuthStateEnum.unAuthenticated:
-            const locationPath = this._location.path();
-            this._router.navigate(['/sign-in'], {
-              queryParams: locationPath
-                ? {
-                    returnUrl: locationPath,
-                  }
-                : {},
-            });
-            break;
-          case AuthStateEnum.authenticated:
-          default:
-            break;
-        }
-        return state === AuthStateEnum.authenticated;
-      })
-    );
-  }
+  constructor(private _auth: AuthService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -60,7 +29,7 @@ export class AuthGuard
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authStateChange();
+    return this._auth.authGuard();
   }
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
@@ -92,6 +61,6 @@ export class AuthGuard
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authStateChange();
+    return this._auth.authGuard();
   }
 }

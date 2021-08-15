@@ -1,16 +1,17 @@
+import { Location } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
   SignInBodyModel,
   AuthenticatedDataModel,
   SignUpBodyModal,
 } from 'src/models/auth.model';
 import { SetAuthState } from 'src/shared/states/auth/auth.actions';
-import { AuthStateEnum } from 'src/shared/states/auth/auth.state';
+import { AuthState, AuthStateEnum } from 'src/shared/states/auth/auth.state';
 import { DateService } from './date.service';
 import { FirebaseService } from './firebase.service';
 import { LocalStorageService } from './local-storage.service';
@@ -19,13 +20,67 @@ import { LocalStorageService } from './local-storage.service';
   providedIn: 'root',
 })
 export class AuthService {
+  @Select(AuthState)
+  authState$!: Observable<AuthStateEnum>;
+
   constructor(
     private _localStorage: LocalStorageService,
     private _store: Store,
     private _firebase: FirebaseService,
     private _date: DateService,
-    private _router: Router
+    private _router: Router,
+    private _location: Location
   ) {}
+
+  authGuard() {
+    return this.authState$.pipe(
+      switchMap((state) => {
+        if (state === AuthStateEnum.unknow) {
+          const rememberUser = this.getRememberUser();
+          const refreshToken = this.getRefreshToken();
+          const expireTime = this.getExpireTime();
+          const isExpired = expireTime && this._date.getTime() > expireTime;
+          if (refreshToken) {
+            switch (true) {
+              case rememberUser:
+                return this.signInWithToken(refreshToken!).pipe(
+                  switchMap(() => this.authState$)
+                );
+              case !rememberUser && !isExpired:
+                this.setAuthState(AuthStateEnum.authenticated);
+                break;
+              case !rememberUser && isExpired:
+              default:
+                this.signOut();
+                break;
+            }
+          } else {
+            this.setAuthState(AuthStateEnum.unAuthenticated);
+          }
+        }
+        return this.authState$;
+      }),
+      filter((state) => state !== AuthStateEnum.unknow),
+      map((state) => {
+        switch (state) {
+          case AuthStateEnum.unAuthenticated:
+            const locationPath = this._location.path();
+            this._router.navigate(['/sign-in'], {
+              queryParams: locationPath
+                ? {
+                    returnUrl: locationPath,
+                  }
+                : {},
+            });
+            break;
+          case AuthStateEnum.authenticated:
+          default:
+            break;
+        }
+        return state === AuthStateEnum.authenticated;
+      })
+    );
+  }
 
   signInWithEmailPassword(
     signInData: SignInBodyModel,

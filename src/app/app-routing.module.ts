@@ -6,8 +6,8 @@ import { ErrorScreenComponent } from './components/error-screen/error-screen.com
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
     redirectTo: 'music',
+    pathMatch: 'full',
   },
   {
     path: 'sign-in',

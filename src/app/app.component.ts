@@ -38,8 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
   preOpeningSidenav = true;
 
   constructor(
-    private _auth: AuthService,
-    private _date: DateService,
     private _themeMode: ThemeModeService,
     private _media: MediaService,
     private _search: SearchService
@@ -67,30 +65,7 @@ export class AppComponent implements OnInit, OnDestroy {
     );
   }
 
-  checkAuthenticateWhenInitApp() {
-    const rememberUser = this._auth.getRememberUser();
-    const refreshToken = this._auth.getRefreshToken();
-    const expireTime = this._auth.getExpireTime();
-    const isExpired = expireTime && this._date.getTime() > expireTime;
-    if (refreshToken) {
-      switch (true) {
-        case rememberUser:
-          this._auth.signInWithToken(refreshToken!).subscribe();
-          break;
-        case !rememberUser && isExpired:
-          this._auth.signOut();
-          break;
-        case !rememberUser && !isExpired:
-          this._auth.setAuthState(AuthStateEnum.authenticated);
-          break;
-        default:
-          this._auth.setAuthState(AuthStateEnum.unAuthenticated);
-          break;
-      }
-    } else {
-      this._auth.setAuthState(AuthStateEnum.unAuthenticated);
-    }
-  }
+  checkAuthenticateWhenInitApp() {}
 
   handleLargeScreenSize() {
     this._media
