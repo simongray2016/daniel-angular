@@ -12,6 +12,6 @@ export class MusicService {
   constructor() {}
 
   getCollection() {
-    return timer(1000).pipe(map(() => this.collection));
+    return timer(3000).pipe(map(() => this.collection));
   }
 }

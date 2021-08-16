@@ -1,35 +1,20 @@
 <div class="flex overflow-x-scroll hide-scrollbar">
   <ng-container *ngFor="let track of playlist; let i; as: index">
-    <div class="flex-grow-0 flex-shrink-0 mr-5 w-44">
+    <div class="flex-grow-0 flex-shrink-0 mr-5 w-28 md:w-44">
       <div
         (mouseenter)="trackHovered = i"
         (mouseleave)="trackHovered = null"
-        class="w-44 h-44 relative cursor-pointer bg-cover"
+        class="w-28 h-28 md:w-44 md:h-44 relative cursor-pointer bg-cover"
         [style.background-image]="'url(' + track.calculated_artwork_url + ')'"
       >
-        <ng-container *ngIf="trackHovered === i">
+        <div
+          class="w-full h-ful"
+          *ngIf="trackHovered === i"
+          @FadeInFadeOutTrigger
+        >
           <div
             class="
               absolute
-              top-1/2
-              left-1/2
-              transform
-              -translate-x-1/2 -translate-y-1/2
-              rounded-full
-              w-16
-              h-16
-              bg-purple-900
-              flex
-              justify-center
-              items-center
-            "
-          >
-            <mat-icon class="transform scale-150 text-white"
-              >play_arrow</mat-icon
-            >
-          </div>
-          <div
-            class="
               top-0
               left-0
               w-full
@@ -39,9 +24,37 @@
               to-transparent
             "
           ></div>
-        </ng-container>
+          <div
+            class="
+              absolute
+              top-1/2
+              left-1/2
+              transform
+              -translate-x-1/2 -translate-y-1/2
+              rounded-full
+              w-11
+              h-11
+              md:w-16 md:h-16
+              bg-purple-900
+              flex
+              justify-center
+              items-center
+            "
+          >
+            <mat-icon class="transform scale-100 md:scale-150 text-white"
+              >play_arrow</mat-icon
+            >
+          </div>
+        </div>
       </div>
-      <div class="mt-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
+      <div
+        class="
+          mt-2
+          whitespace-nowrap
+          overflow-hidden overflow-ellipsis
+          cursor-pointer
+        "
+      >
         {{ track.title }}
       </div>
       <div class="text-xs text-gray-500">{{ track.short_description }}</div>

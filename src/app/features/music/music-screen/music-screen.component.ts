@@ -7,8 +7,7 @@ import { MusicService } from 'src/services/music.service';
   templateUrl: './music-screen.component.html',
 })
 export class MusicScreenComponent implements OnInit {
-  collection: any[] = [];
-  relatedPlaylist: any[] = [];
+  collection$!: Observable<any[]>;
 
   constructor(private _music: MusicService) {}
 
@@ -17,9 +16,6 @@ export class MusicScreenComponent implements OnInit {
   }
 
   getCollection() {
-    this._music.getCollection().subscribe((collection) => {
-      this.collection = collection;
-      this.relatedPlaylist = this.collection[0].items.collection;
-    });
+    this.collection$ = this._music.getCollection();
   }
 }

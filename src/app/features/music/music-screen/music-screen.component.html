@@ -1,9 +1,21 @@
 <div class="min-h-screen p-8">
-  <div class="w-full">
-    <div class="text-xl">More of what you like</div>
-    <div class="text-gray-500 mt-3 mb-8">
-      Suggestions based on what you've liked or played
+  <ng-container *ngIf="collection$ | async as collection; else loading">
+    <div
+      *ngFor="let section of collection"
+      class="w-full pb-6 mb-6 border-b border-gray-200 dark:border-gray-600"
+    >
+      <div class="text-xl">{{ section.title }}</div>
+      <div class="text-gray-500 mt-3 mb-8">
+        {{ section.description }}
+      </div>
+      <app-music-slider
+        [playlist]="section.items.collection"
+      ></app-music-slider>
     </div>
-    <app-music-slider [playlist]="relatedPlaylist"></app-music-slider>
-  </div>
+  </ng-container>
+  <ng-template #loading>
+    <div class="h-screen w-full flex items-center justify-center">
+      <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
+    </div>
+  </ng-template>
 </div>
