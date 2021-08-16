@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-music-slider',
   templateUrl: './music-slider.component.html',
 })
 export class MusicSliderComponent implements OnInit {
+  @Input() playlist: any[] = [];
 
-  constructor() { }
+  trackHovered: number | null = null;
 
-  ngOnInit(): void {
-  }
+  constructor() {}
 
+  ngOnInit(): void {}
 }
