@@ -6,6 +6,7 @@ import { MusicScreenComponent } from './music-screen/music-screen.component';
 import { MusicSliderComponent } from './components/music-slider/music-slider.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [MusicScreenComponent, MusicSliderComponent],
@@ -14,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MusicRoutingModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
   ],
 })
 export class MusicModule {}

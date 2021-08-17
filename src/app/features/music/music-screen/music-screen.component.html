@@ -1,6 +1,7 @@
 <div class="min-h-screen p-8">
   <ng-container *ngIf="collection$ | async as collection; else loading">
     <div
+      @FadeInFadeOutTrigger
       *ngFor="let section of collection"
       class="w-full pb-6 mb-6 border-b border-gray-200 dark:border-gray-600"
     >

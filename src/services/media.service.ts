@@ -19,6 +19,10 @@ export class MediaService {
 
   constructor(@Inject(DOCUMENT) private _document: Document) {}
 
+  windowResize() {
+    return fromEvent(window, 'resize');
+  }
+
   getWindowSize(): Observable<{ height: number; width: number }> {
     const { innerHeight, innerWidth } = window;
     return fromEvent(window, 'resize').pipe(
