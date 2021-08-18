@@ -71,6 +71,41 @@
     class="
       absolute
       top-0
+      left-0
+      h-28
+      md:h-44 md:w-12
+      flex
+      items-center
+      justify-start
+      cursor-pointer
+      group
+    "
+    *ngIf="sliderBackwardButton$ | async"
+    (click)="backList()"
+  >
+    <button
+      class="
+        w-8
+        h-8
+        rounded
+        flex
+        items-center
+        justify-center
+        bg-purple-900
+        group-hover:bg-purple-800
+        duration-200
+        outline-none
+      "
+    >
+      <mat-icon class="text-gray-200 group-hover:text-white duration-200"
+        >navigate_before</mat-icon
+      >
+    </button>
+  </div>
+  <div
+    class="
+      absolute
+      top-0
       right-0
       h-28
       md:h-44 md:w-12
@@ -82,7 +117,6 @@
     "
     *ngIf="silderForwardButton$ | async"
     (click)="nextList()"
-    #silderForwardButton
   >
     <button
       class="
